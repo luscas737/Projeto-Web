@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sonora — Pesquisa sobre músicas, artistas e bandas</title>
+    <meta name="description" content="Repositório curado para pesquisa musical: análise, contexto histórico e descoberta de artistas, álbuns e movimentos." />
+    <meta property="og:title" content="Sonora — Pesquisa musical" />
+    <meta property="og:description" content="Repositório curado para pesquisa musical: análise, contexto histórico e descoberta de artistas, álbuns e movimentos." />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&display=swap" />
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              brand: "#e11d48",
+              surface: "#09090b",
+              "card-dark": "#18181b",
+            },
+            fontFamily: {
+              serif: ['"Instrument Serif"', "serif"],
+              sans: ['"Inter"', "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
+
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="min-h-screen bg-surface text-zinc-300 font-sans">
+    <nav class="sticky top-0 z-50 bg-surface/80 backdrop-blur-md border-b border-zinc-800/50">
+      <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+        <div class="flex items-center gap-8">
+          <span class="font-serif text-2xl italic text-zinc-100 tracking-tight">Sonora</span>
+          <div class="hidden md:flex items-center gap-6 text-sm font-medium text-zinc-400">
+            <a href="#" class="hover:text-zinc-100 transition-colors">Arquivo</a>
+            <a href="#" class="hover:text-zinc-100 transition-colors">Coleções</a>
+            <a href="#" class="hover:text-zinc-100 transition-colors">Curadores</a>
+          </div>
+        </div>
+        <button class="text-sm font-medium px-4 py-2 text-zinc-400 hover:text-zinc-100 transition-colors">
+          Sobre o projeto
+        </button>
+      </div>
+    </nav>
+
+    <main>
+      <section class="py-24 px-6">
+        <div class="max-w-3xl mx-auto text-center">
+          <h1 class="text-5xl md:text-6xl font-serif italic text-zinc-100 leading-none mb-8 text-balance">
+            Descoberta pela lente da pesquisa
+          </h1>
+          <p class="text-zinc-400 text-base md:text-lg mb-12 max-w-[52ch] mx-auto text-pretty">
+            Um repositório curado para análise musical, decomposição estrutural e contexto histórico de músicas, artistas e bandas.
+          </p>
+
+          <form id="search-form" class="relative group">
+            <div class="absolute -inset-1 bg-gradient-to-r from-brand/20 to-brand/0 rounded-xl blur opacity-25 group-focus-within:opacity-100 transition duration-1000 group-focus-within:duration-200"></div>
+            <div class="relative flex items-center bg-card-dark ring-1 ring-white/10 rounded-lg p-2 focus-within:ring-brand/40 transition-shadow">
+              <div class="pl-4 text-zinc-500">
+                <svg xmlns="http://www.w3.org/2000/svg" class="size-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+              </div>
+              <input
+                id="search-input"
+                type="text"
+                placeholder="Pesquise músicas, artistas ou bandas..."
+                class="w-full bg-transparent border-none focus:ring-0 text-zinc-100 px-4 py-3 text-base placeholder:text-zinc-600 outline-none"
+              />
+              <button type="submit" class="bg-zinc-100 text-zinc-950 px-6 py-2.5 rounded-md text-sm font-semibold hover:bg-zinc-200 transition-colors">
+                Pesquisar
+              </button>
+            </div>
+          </form>
+
+          <div id="tabs" class="flex flex-wrap items-center justify-center gap-2 mt-10">
+            <button data-kind="all" class="tab tab-active">Todos</button>
+            <button data-kind="artists" class="tab tab-idle">Artistas</button>
+            <button data-kind="albums" class="tab tab-idle">Álbuns</button>
+            <button data-kind="bands" class="tab tab-idle">Bandas</button>
+            <button data-kind="movements" class="tab tab-idle">Gravações</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="pb-24 px-6">
+        <div class="max-w-6xl mx-auto">
+          <div class="flex items-center justify-between mb-8 pb-4 border-b border-zinc-800/50">
+            <h2 id="results-title" class="text-sm font-medium uppercase tracking-widest text-zinc-500">
+              Resultados da pesquisa
+            </h2>
+            <span id="results-count" class="text-xs text-zinc-600">0 resultados</span>
+          </div>
+
+          <div id="state-empty" class="py-24 text-center text-zinc-600 text-sm">
+            Digite acima para pesquisar no catálogo aberto do MusicBrainz.
+          </div>
+
+          <div id="state-loading" class="py-24 hidden flex-col items-center gap-3 text-zinc-500 text-sm">
+            <svg xmlns="http://www.w3.org/2000/svg" class="size-5 animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+            Consultando MusicBrainz...
+          </div>
+
+          <div id="state-error" class="py-24 hidden text-center text-brand text-sm">
+            Não foi possível carregar os resultados. Tente novamente.
+          </div>
+
+          <div id="state-none" class="py-24 hidden text-center text-zinc-600 text-sm">
+            Nenhum resultado encontrado.
+          </div>
+
+          <div id="results-grid" class="hidden grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="border-t border-zinc-800/50 py-12 px-6">
+      <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-start gap-8">
+        <div class="space-y-4">
+          <span class="font-serif text-xl italic text-zinc-100">Sonora</span>
+          <p class="text-xs text-zinc-500 max-w-xs leading-relaxed">
+            Um projeto independente de pesquisa dedicado à preservação arquivística da história sonora e seu impacto cultural.
+          </p>
+        </div>
+        <div class="flex gap-16">
+          <div class="space-y-4">
+            <h4 class="text-xs font-semibold text-zinc-100 uppercase tracking-tighter">Navegação</h4>
+            <ul class="text-xs text-zinc-500 space-y-2">
+              <li><a href="#" class="hover:text-zinc-300 transition-colors">Diretório</a></li>
+              <li><a href="#" class="hover:text-zinc-300 transition-colors">Metodologia</a></li>
+              <li><a href="#" class="hover:text-zinc-300 transition-colors">Submissão</a></li>
+            </ul>
+          </div>
+          <div class="space-y-4">
+            <h4 class="text-xs font-semibold text-zinc-100 uppercase tracking-tighter">Conectar</h4>
+            <ul class="text-xs text-zinc-500 space-y-2">
+              <li><a href="#" class="hover:text-zinc-300 transition-colors">X / Twitter</a></li>
+              <li><a href="#" class="hover:text-zinc-300 transition-colors">Newsletter</a></li>
+              <li><a href="#" class="hover:text-zinc-300 transition-colors">Institucional</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="max-w-6xl mx-auto mt-12 pt-8 border-t border-zinc-800/20 flex justify-between items-center">
+        <p class="text-[10px] text-zinc-600 uppercase tracking-[0.2em]">© 2026 Sonora Music Index</p>
+        <div class="flex items-center gap-3">
+          <span class="size-1.5 rounded-full bg-brand animate-pulse"></span>
+          <span class="text-[10px] text-zinc-600 uppercase tracking-[0.2em]">Sistema operacional</span>
+        </div>
+      </div>
+    </footer>
+
+    <script src="app.js"></script>
+  </body>
+</html>
